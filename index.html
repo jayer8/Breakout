@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<!-- Based on: https://developer.mozilla.org/en-US/docs/Games/Workflows/2D_Breakout_game_pure_JavaScript -->
+<!-- Last update: November 15, 2015 -->
+<!-- Author: Javier Rugerio. -->
+
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Breackout</title>
+		<style>
+			* { padding: 0;
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="480" height="320"> </canvas>
+		<script type="text/javascript" src="js/Ball.js"></script>
+		<script type="text/javascript" src="js/Brick.js"></script>
+		<script type="text/javascript" src="js/Paddle.js"></script>
+		<script type="text/javascript" src="js/Breakout.js"></script>
+		<script>
+			/***
+			 * Invokes a user-defined function every (1000 / 60) ms.
+			 */
+			window.requestAnimationFrame = (function() {
+				return window.requestAnimationFrame		  ||
+					   window.webkitRequestAnimationFrame ||
+					   window.mozRequestAnimationFrame	  ||
+					   function(callback) {
+					   		window.setTimeout(callback, 1000 / 60);
+					   };
+			})();
+		
+			var breakout = new Breakout("myCanvas");
+			
+			/**
+			 * Manages events from GUI.
+			 */
+			
+			document.body.onkeydown = function(e) {
+				if (e.keyCode == 37) {
+					breakout.paddle.direction = Direction.LEFT;
+				}
+				else if (e.keyCode == 39) {
+					breakout.paddle.direction = Direction.RIGHT;
+				}
+			};
+			
+			document.body.onkeyup = function(e) {
+				if (e.keyCode == 37 || e.keyCode == 39) {
+					breakout.paddle.direction = Direction.NONE;
+				}
+			};
+			
+			document.body.onmousemove = function(e) {
+				var relativeX = e.clientX - breakout.canvas.offsetLeft;
+				if (relativeX >  (breakout.paddle.width / 2) &&
+					relativeX < breakout.canvas.width - (breakout.paddle.width / 2)) {
+						breakout.paddle.x = relativeX - breakout.paddle.width / 2;
+				}
+			};
+			
+			/*
+			 * Entry point.
+			 */
+			breakout.run();
+		</script>
+	</body>
+</html>
